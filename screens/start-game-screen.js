@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
 import PrimaryButton from "../components/primary-button";
 import Header from "../components/header";
 import Card from "../components/card";
@@ -8,11 +8,36 @@ import color from "../variables/color";
 
 const StartGameScreen = () => {
     const [enteredValue, setEnteredValue] = useState("");
+    const [confirmed, setConfirmed] = useState(false);
+    const [selectedNumber, setSelectedNumber] = useState();
 
     const handleInput = (inputText) => {
-        console.log(inputText);
         setEnteredValue(inputText.replace(/[^0-9]/g, ""));
     };
+
+    const handleReset = () => {
+        setEnteredValue("");
+        setConfirmed(false);
+    };
+
+    const handleConfirm = () => {
+        const chosenNumber = parseInt(enteredValue);
+        if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
+            Alert.alert("Invalid Number", "Number has to be a number between 1 and 99", [
+                { text: "OKay", style: "destructive", onPress: handleReset },
+            ]);
+            return;
+        }
+        setConfirmed(true);
+        setSelectedNumber(chosenNumber);
+        setEnteredValue("");
+    };
+
+    let confirmedOutput;
+    if (confirmed) {
+        confirmedOutput = <Text>Chosen number: {selectedNumber}</Text>;
+    }
+
     return (
         <>
             <TouchableWithoutFeedback
@@ -23,7 +48,7 @@ const StartGameScreen = () => {
                 <View style={styles.screen}>
                     <Header title="Guess a Number" />
                     <Card style={styles.inputContainer}>
-                        <Text>Set a number</Text>
+                        <Text>Set a number (1~99)</Text>
                         <Input
                             style={styles.numberInput}
                             blurOnSubmit
@@ -36,13 +61,18 @@ const StartGameScreen = () => {
                         />
                         <View style={styles.buttonsContainer}>
                             <View style={styles.buttonContainer}>
-                                <PrimaryButton style={styles.resetButton}>Reset</PrimaryButton>
+                                <PrimaryButton style={styles.resetButton} onPress={handleReset}>
+                                    Reset
+                                </PrimaryButton>
                             </View>
                             <View style={styles.buttonContainer}>
-                                <PrimaryButton style={styles.confirmButton}>Confirm</PrimaryButton>
+                                <PrimaryButton style={styles.confirmButton} onPress={handleConfirm}>
+                                    Confirm
+                                </PrimaryButton>
                             </View>
                         </View>
                     </Card>
+                    {confirmed && confirmedOutput}
                 </View>
             </TouchableWithoutFeedback>
         </>
@@ -58,7 +88,8 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         width: 300,
-        marginTop: 60,
+        marginTop: 40,
+        marginBottom: 20,
         maxWidth: "80%",
         alignItems: "center",
     },
