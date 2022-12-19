@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         height: 90,
         paddingTop: 32,
         paddingHorizontal: 16,
-        backgroundColor: color.primaryBgc,
+        backgroundColor: color.primaryColor,
         justifyContent: "center",
         alignItems: "center",
     },

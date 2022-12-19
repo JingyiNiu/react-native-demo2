@@ -1,32 +1,51 @@
-import { TextInput, View, StyleSheet, Text } from "react-native";
+import { useState } from "react";
+import { View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard } from "react-native";
 import PrimaryButton from "../components/primary-button";
 import Header from "../components/header";
 import Card from "../components/card";
+import Input from "../components/input";
 import color from "../variables/color";
 
 const StartGameScreen = () => {
+    const [enteredValue, setEnteredValue] = useState("");
+
+    const handleInput = (inputText) => {
+        console.log(inputText);
+        setEnteredValue(inputText.replace(/[^0-9]/g, ""));
+    };
     return (
-        <View style={styles.screen}>
-            <Header title="Guess a Number" />
-            <Card style={styles.inputContainer}>
-                <Text>Set a number</Text>
-                <TextInput
-                    style={styles.numberInput}
-                    maxLength={2}
-                    keyboardType="number-pad"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                />
-                <View style={styles.buttonsContainer}>
-                    <View style={styles.buttonContainer}>
-                        <PrimaryButton style={styles.resetButton}>Reset</PrimaryButton>
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        <PrimaryButton style={styles.confirmButton}>Confirm</PrimaryButton>
-                    </View>
+        <>
+            <TouchableWithoutFeedback
+                onPress={() => {
+                    Keyboard.dismiss();
+                }}
+            >
+                <View style={styles.screen}>
+                    <Header title="Guess a Number" />
+                    <Card style={styles.inputContainer}>
+                        <Text>Set a number</Text>
+                        <Input
+                            style={styles.numberInput}
+                            blurOnSubmit
+                            maxLength={2}
+                            keyboardType="number-pad"
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            onChangeText={handleInput}
+                            value={enteredValue}
+                        />
+                        <View style={styles.buttonsContainer}>
+                            <View style={styles.buttonContainer}>
+                                <PrimaryButton style={styles.resetButton}>Reset</PrimaryButton>
+                            </View>
+                            <View style={styles.buttonContainer}>
+                                <PrimaryButton style={styles.confirmButton}>Confirm</PrimaryButton>
+                            </View>
+                        </View>
+                    </Card>
                 </View>
-            </Card>
-        </View>
+            </TouchableWithoutFeedback>
+        </>
     );
 };
 
@@ -47,12 +66,6 @@ const styles = StyleSheet.create({
         height: 50,
         width: 50,
         fontSize: 32,
-        borderBottomColor: color.primaryTextColor,
-        borderBottomWidth: 1,
-        color: color.primaryTextColor,
-        marginVertical: 8,
-        fontWeight: "bold",
-        textAlign: "center",
     },
     buttonsContainer: {
         flexDirection: "row",
@@ -61,9 +74,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     resetButton: {
-        backgroundColor: color.secondaryBgc,
+        backgroundColor: color.secondaryColor,
     },
     confirmButton: {
-        backgroundColor: color.primaryBgc,
+        backgroundColor: color.primaryColor,
     },
 });
