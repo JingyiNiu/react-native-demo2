@@ -2,11 +2,11 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import color from "../variables/color";
 
-const Header = (props) => {
+const Header = ({ title }) => {
     return (
         <>
             <View style={styles.header}>
-                <Text style={styles.headerTitle}>{props.title}</Text>
+                <Text style={styles.headerTitle}>{title}</Text>
             </View>
         </>
     );

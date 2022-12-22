@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
 import PrimaryButton from "../components/primary-button";
-import Header from "../components/header";
 import Card from "../components/card";
 import Input from "../components/input";
 import color from "../variables/color";
 import NumberContainer from "../components/number-container";
 
-const StartGameScreen = () => {
+const StartGameScreen = ({ onPickNumber }) => {
     const [enteredValue, setEnteredValue] = useState("");
     const [confirmed, setConfirmed] = useState(false);
     const [selectedNumber, setSelectedNumber] = useState();
@@ -32,6 +31,7 @@ const StartGameScreen = () => {
         setConfirmed(true);
         setSelectedNumber(chosenNumber);
         setEnteredValue("");
+        Keyboard.dismiss();
     };
 
     let confirmedOutput;
@@ -40,7 +40,10 @@ const StartGameScreen = () => {
             <View style={styles.outputContainer}>
                 <Text>Chosen number: </Text>
                 <NumberContainer number={selectedNumber} />
-                <PrimaryButton style={styles.confirmButton} onPress={handleReset}>
+                <PrimaryButton
+                    style={styles.confirmButton}
+                    onPress={() => onPickNumber(selectedNumber)}
+                >
                     Start Game
                 </PrimaryButton>
             </View>
@@ -55,7 +58,6 @@ const StartGameScreen = () => {
                 }}
             >
                 <View style={styles.screen}>
-                    <Header title="Guess a Number" />
                     <Card style={styles.inputContainer}>
                         <Text>Set a number (1~99)</Text>
                         <Input
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     outputContainer: {
-        alignItems:"center"
+        alignItems: "center",
     },
     inputContainer: {
         width: 300,
