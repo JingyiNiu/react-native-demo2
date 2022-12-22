@@ -5,6 +5,7 @@ import Header from "../components/header";
 import Card from "../components/card";
 import Input from "../components/input";
 import color from "../variables/color";
+import NumberContainer from "../components/number-container";
 
 const StartGameScreen = () => {
     const [enteredValue, setEnteredValue] = useState("");
@@ -35,7 +36,15 @@ const StartGameScreen = () => {
 
     let confirmedOutput;
     if (confirmed) {
-        confirmedOutput = <Text>Chosen number: {selectedNumber}</Text>;
+        confirmedOutput = (
+            <View style={styles.outputContainer}>
+                <Text>Chosen number: </Text>
+                <NumberContainer number={selectedNumber} />
+                <PrimaryButton style={styles.confirmButton} onPress={handleReset}>
+                    Start Game
+                </PrimaryButton>
+            </View>
+        );
     }
 
     return (
@@ -85,6 +94,9 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         alignItems: "center",
+    },
+    outputContainer: {
+        alignItems:"center"
     },
     inputContainer: {
         width: 300,
