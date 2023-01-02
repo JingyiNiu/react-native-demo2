@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { useState, useRef, useEffect } from "react";
+import { View, Text, StyleSheet, Alert } from "react-native";
+
 import NumberContainer from "../components/number-container";
 import PrimaryButton from "../components/primary-button";
 import color from "../variables/color";
@@ -16,9 +17,43 @@ const generateRandomBetween = (min, max, exclude) => {
     }
 };
 
-const GameScreen = ({ userNumber }) => {
+const GameScreen = ({ userNumber, onGameOver }) => {
     const initialGuess = generateRandomBetween(1, 100, userNumber);
     const [currentGuess, setCurrentGuess] = useState(initialGuess);
+
+    const currentLow = useRef(1);
+    const currentHigh = useRef(100);
+
+    useEffect(() => {
+        if (currentGuess === userNumber) {
+            onGameOver();
+        }
+    }, [currentGuess, userNumber, onGameOver]);
+
+    const nextGuessHandler = (direction) => {
+        if (
+            (direction === "lower" && currentGuess < userNumber) ||
+            (direction === "higher" && currentGuess > userNumber)
+        ) {
+            Alert.alert("Don't lie!", "You know that this is wrong...", [
+                { text: "Sorry!", style: "cancel" },
+            ]);
+            return;
+        }
+
+        if (direction === "lower") {
+            currentHigh.current = currentGuess;
+        } else {
+            currentLow.current = currentGuess + 1;
+        }
+
+        const newRandomNumber = generateRandomBetween(
+            currentLow.current,
+            currentHigh.current,
+            currentGuess
+        );
+        setCurrentGuess(newRandomNumber);
+    };
 
     return (
         <>
@@ -26,8 +61,18 @@ const GameScreen = ({ userNumber }) => {
                 <Text>Opponent's Guess</Text>
                 <NumberContainer number={currentGuess} />
                 <View style={styles.buttonContainer}>
-                    <PrimaryButton style={styles.lowerBtn}>Lower</PrimaryButton>
-                    <PrimaryButton style={styles.higherBtn}>Higher</PrimaryButton>
+                    <PrimaryButton
+                        style={styles.lowerBtn}
+                        onPress={() => nextGuessHandler("lower")}
+                    >
+                        Lower
+                    </PrimaryButton>
+                    <PrimaryButton
+                        style={styles.higherBtn}
+                        onPress={() => nextGuessHandler("higher")}
+                    >
+                        Higher
+                    </PrimaryButton>
                 </View>
                 <View style={styles.logContainer}>
                     <Text>LOG ROUNDS</Text>
