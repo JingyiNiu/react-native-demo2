@@ -76,9 +76,9 @@ const GameScreen = ({ userNumber, onGameOver }) => {
                         Higher
                     </PrimaryButton>
                 </View>
-                <View style={styles.logContainer}>
+                {/* <View style={styles.logContainer}>
                     <Text>LOG ROUNDS</Text>
-                </View>
+                </View> */}
             </View>
         </>
     );
